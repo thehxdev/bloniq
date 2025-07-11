@@ -6,7 +6,7 @@
 
 // include newline and null terminator
 #define BUFFER_SIZE (2048+2)
-#define VERSION_STRING "0.1.0"
+#define VERSION_STRING "0.1.1"
 
 #define file_close(f) \
     if ((f)) \
@@ -17,7 +17,10 @@ typedef struct bloom bloom_t;
 int main(int argc, char *argv[]) {
     int err = 0;
     if (argc != 3) {
-        fprintf(stderr, "bloniq v"VERSION_STRING "\nUsage: %s <input-file> <output-file>\n", argv[0]);
+        fprintf(stderr,
+                "bloniq v"VERSION_STRING
+                "\nUsage: %s (<input-file>|stdin) (<output-file>|stdout)\n",
+                argv[0]);
         return 1;
     }
 
@@ -51,9 +54,11 @@ int main(int argc, char *argv[]) {
     size_t buf_len;
     while (fgets(buf, BUFFER_SIZE, fp)) {
         buf_len = strlen(buf);
+        // remove the newline
+        buf[buf_len] = 0; buf_len--;
         if (!bloom_check(&bloom, buf, buf_len)) {
             bloom_add(&bloom, buf, buf_len);
-            fwrite(buf, sizeof(*buf), buf_len, op);
+            fputs(buf, op);
         }
     }
 
