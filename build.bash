@@ -10,7 +10,7 @@ if [[ -z "$CC" ]]; then
     CC=cc
 fi
 
-CFLAGS=(-std=gnu99 -O2 -DNDEBUG -Wall -Wextra -s)
+CFLAGS=(-std=c99 -O2 -DNDEBUG -Wall -Wextra -s)
 
 make -j$(nproc) -C "$LIBBLOOM_PATH"
 
